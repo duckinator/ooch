@@ -3,16 +3,15 @@ import net/Socket, net/ServerSocket, net/StreamSocket, net/berkeley, net/Address
 /*
 SOCKET INITIALIZATION:
 
-I'd like to see the following:
+ServerSocket new() // Create socket, no binding, not listening
+ServerSocket new(port: Int) // Create socket, bind to port, not listening
+ServerSocket new(ip: String, port: Int) // Create socket, bind to IP and port, not listening
+ServerSocket new(ip: String, port: Int, enabled: Bool) // Create socket, bind to IP and port, listening only if `enabled` is true
 
-ServerSocket new() // no auto-listen, it's not set up! this is implemented, other 3 overloads are not
-ServerSocket new(port: Int)
-ServerSocket new(ip: String, port: Int)
-ServerSocket new(ip: String, port: Int, listen: Bool)
-
-ServerSocket bind(ip: String)      // not implemented
-ServerSocket bind(port: Int)       // implemented, ServerSocket bind()
-ServerSocket listen(backlog: Int)  // implemented, ServerSocket listen()
+ServerSocket bind(port: Int) // Bind to port
+ServerSocket bind(ip: String, port: Int) // Bind to IP and port
+ServerSocket listen(backlog: Int) // Listen, with backlog specified as argument
+ServerSocket listen() // Calls listen(100), more details in sdk/net/ServerSocket.ooc line #138
 
 ACCEPTING CONNECTIONS:
 Abstracting away from a receiving StreamSocket, by adding the following:
@@ -22,13 +21,7 @@ conn in recv()          // not implemented
 
 */
 
-socket := ServerSocket new()
-inaddr: InAddr
-inet_pton(AddressFamily IP4, "0.0.0.0", inaddr&)
-addr := SocketAddressIP4 new(inaddr, 8000)
-socket bind(addr)
-//socket bind(8000)
-socket listen(1) // no clue what a good number would be. went with 1.
+socket := ServerSocket new("0.0.0.0", 8000, true)
 
 while(true) {
     conn := socket accept()
@@ -39,7 +32,7 @@ while(true) {
 
 /* Using all the modifications I mentioned, we could turn the above code into this: */
 /*
-socket := ServerSocket new("0.0.0.0", 8000)
+socket := ServerSocket new("0.0.0.0", 8000, true)
 
 while(true) {
     conn := socket accept()
