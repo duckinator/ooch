@@ -14,4 +14,6 @@ socket accept(|conn|
 
     // Content
     conn out write("<html><body>Hello, from the ooc socket world!</body></html>")
+
+    true
 )
