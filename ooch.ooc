@@ -9,6 +9,7 @@ socket accept(|conn|
     conn out write("HTTP/1.0 200 OK\r\n")
     conn out write("Server: ooc httpd\r\n")
     conn out write("Content-Type: text/html\r\n")
+    conn out write("Content-Length: 59\r\n")
     conn out write("\r\n")
     // End headers
 
